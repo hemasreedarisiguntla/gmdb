@@ -66,7 +66,7 @@ class GmdbControllerITTest {
     public void getAMovieByTitleNotFound() throws Exception {
         mockMvc.perform(get("/movies/{movieTitle}", "abc"))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Movie not found"));
+                .andExpect(content().string("Movie not found."));
     }
 
 }

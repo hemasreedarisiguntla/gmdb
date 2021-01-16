@@ -3,6 +3,8 @@ package com.galvanize.gmdb.controller;
 import com.galvanize.gmdb.exception.MovieNotFoundException;
 import com.galvanize.gmdb.model.MovieEntity;
 import com.galvanize.gmdb.service.MovieService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +28,13 @@ public class GmdbController {
     }
 
     @GetMapping("/movies/{movieTitle}")
-    public MovieEntity getAMovieByTitle(@PathVariable String movieTitle) throws MovieNotFoundException {
-        return movieService.getAMovieByTitle(movieTitle);
+    public ResponseEntity<Object> getAMovieByTitle(@PathVariable String movieTitle) {
+        ResponseEntity<Object> responseToBeReturned;
+        try {
+           responseToBeReturned = new ResponseEntity<Object>(movieService.getAMovieByTitle(movieTitle), HttpStatus.OK);
+        } catch (MovieNotFoundException e) {
+            responseToBeReturned = new ResponseEntity<Object>("Movie not found.", HttpStatus.NOT_FOUND);
+        }
+        return responseToBeReturned;
     }
 }

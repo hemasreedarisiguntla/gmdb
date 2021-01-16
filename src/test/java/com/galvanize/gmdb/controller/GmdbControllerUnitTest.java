@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,8 +62,8 @@ class GmdbControllerUnitTest {
         MovieEntity expectedMovie = initalizeSingleData();
         when(movieService.getAMovieByTitle("The Avengers")).thenReturn(expectedMovie);
         GmdbController gmdbController = new GmdbController(movieService);
-        MovieEntity actualMovie = gmdbController.getAMovieByTitle("The Avengers");
-        assertEquals(expectedMovie, actualMovie);
+        ResponseEntity<Object> actualMovie = gmdbController.getAMovieByTitle("The Avengers");
+        assertEquals(expectedMovie, actualMovie.getBody());
     }
 
     private void initalizeMovieData() throws IOException {
