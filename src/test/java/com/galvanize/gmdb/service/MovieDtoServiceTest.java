@@ -3,7 +3,6 @@ package com.galvanize.gmdb.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.gmdb.exception.MovieNotFoundException;
-import com.galvanize.gmdb.model.MovieDto;
 import com.galvanize.gmdb.model.MovieEntity;
 import com.galvanize.gmdb.model.Rating;
 import com.galvanize.gmdb.repository.MovieRepository;
@@ -19,9 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Optional;
 
-import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
@@ -87,7 +84,7 @@ class MovieDtoServiceTest {
     @Test
     public void addRatingToExistingMovie() throws IOException, MovieNotFoundException {
         MovieEntity movieEntityExpected = initalizeSingleData();
-        movieEntityExpected.setRating(Rating.builder().overAllRating(5.0).build());
+        movieEntityExpected.setRating(5.0);
         when(movieRepository.findByTitle("The Avengers")).thenReturn(movieEntityExpected);
         movieService.addRating(movieEntityExpected.getTitle(), 5.0);
         Mockito.verify(movieRepository).save(movieEntityExpected);
@@ -101,7 +98,7 @@ class MovieDtoServiceTest {
         movieService.addRating(movieEntityExpected.getTitle(), 5.0);
         MovieEntity actualMovie = movieService.addRating(movieEntityExpected.getTitle(), 3.0);
 
-        assertEquals(4.0, actualMovie.getRating().getOverAllRating());
+        assertEquals(4.0, actualMovie.getRating());
         Mockito.verify(movieRepository,times(2)).save(movieEntityExpected);
     }
 

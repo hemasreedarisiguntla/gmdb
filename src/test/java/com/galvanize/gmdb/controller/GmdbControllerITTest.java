@@ -100,10 +100,10 @@ class GmdbControllerITTest {
                 .andExpect(jsonPath("title").value("The Avengers"))
                 .andExpect(jsonPath("rating").value(5.0));
 
-//        mockMvc.perform(post("/movies/{movieTitle}/reviews/{rating}", "The Avengers", 3.0))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("title").value("The Avengers"))
-//                .andExpect(jsonPath("rating").value(4.0));
+        mockMvc.perform(post("/movies/{movieTitle}/reviews/{rating}", "The Avengers", 3.0))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("title").value("The Avengers"))
+                .andExpect(jsonPath("rating").value(4.0));
 
     }
 

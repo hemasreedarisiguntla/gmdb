@@ -3,13 +3,12 @@ package com.galvanize.gmdb.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.gmdb.exception.MovieNotFoundException;
-import com.galvanize.gmdb.model.MovieDto;
 import com.galvanize.gmdb.model.MovieEntity;
 import com.galvanize.gmdb.model.Rating;
 import com.galvanize.gmdb.repository.MovieRepository;
+import com.galvanize.gmdb.repository.RatingRepository;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,13 +18,15 @@ import java.util.List;
 public class MovieService {
 
     MovieRepository movieRepository;
+    RatingRepository ratingRepository;
     ObjectMapper objectMapper;
 
     ArrayList<MovieEntity> movieDtoList;
     String movieJsonPath = "src/test/data/movies.json";
 
-    public MovieService(MovieRepository movieRepository) throws IOException {
+    public MovieService(MovieRepository movieRepository, RatingRepository ratingRepository) throws IOException {
         this.movieRepository = movieRepository;
+        this.ratingRepository = ratingRepository;
         seedData();
     }
 
@@ -53,21 +54,23 @@ public class MovieService {
 
     public MovieEntity addRating(String movieTitle, Double rating) throws MovieNotFoundException {
         MovieEntity movieEntity = getAMovieByTitle(movieTitle);
-        Rating existingRating = movieEntity.getRating();
-        if(existingRating ==null) {
-            existingRating = new Rating();
+        List<Rating> existingRating = movieEntity.getRatingList();
+        if(existingRating == null) {
+            existingRating = new ArrayList<>();
         }
-        List<Double> ratings = existingRating.getRatings();
-        if(ratings == null) {
-            ratings = new ArrayList<>();
+        existingRating.add(Rating.builder().rating(rating).build());
+
+        List<Double> ratingList = new ArrayList<>();
+        for (Rating item: existingRating) {
+            ratingList.add(item.getRating());
         }
-
-        ratings.add(rating);
-
-        existingRating.setOverAllRating(ratings.stream().mapToDouble(val -> val).average().orElse(0.0));
-        existingRating.setRatings(ratings);
-        movieEntity.setRating(existingRating);
-
+        Double overallRating = ratingList.stream().mapToDouble(value -> value).average().orElse(0.0);
+        movieEntity.setRatingList(existingRating);
+        movieEntity.setRating(overallRating);
+//        existingRating.setRating(ratings.stream().mapToDouble(val -> val).average().orElse(0.0));
+//        existingRating.setRatings(ratings);
+//        movieEntity.setRating(existingRating);
+        ratingRepository.save();
         movieRepository.save(movieEntity);
         return movieEntity;
     }

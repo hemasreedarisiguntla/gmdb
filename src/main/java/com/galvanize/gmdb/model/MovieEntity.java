@@ -8,6 +8,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @EqualsAndHashCode
@@ -24,10 +25,12 @@ public class MovieEntity {
     String actors;
     String release;
     String description;
+    @JoinColumn(name="title")
+    @OneToMany(cascade = CascadeType.ALL)
+    @Transient
+    List<Rating> ratingList;
 
-    @OneToOne
-    @LazyCollection(LazyCollectionOption.FALSE)
-    Rating rating;
+    Double rating;
 
 
 }

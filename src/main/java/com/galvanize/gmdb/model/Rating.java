@@ -3,6 +3,7 @@ package com.galvanize.gmdb.model;
 
 import lombok.*;
 
+import javax.persistence.*;
 import java.util.List;
 @Getter
 @Setter
@@ -10,7 +11,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Rating {
-    double overAllRating;
-    List<Double> ratings;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    double rating;
+    String title;
 }
