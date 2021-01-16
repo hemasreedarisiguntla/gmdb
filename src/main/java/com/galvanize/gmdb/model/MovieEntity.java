@@ -4,8 +4,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,22 +13,21 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "movieEntity")
 public class MovieEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     String title;
     String director;
     String actors;
     String release;
     String description;
-    @JoinColumn(name="title")
-    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "title")
+    @OneToMany(mappedBy = "movieEntity", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @Transient
     List<Rating> ratingList;
-
     Double rating;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
 
 }

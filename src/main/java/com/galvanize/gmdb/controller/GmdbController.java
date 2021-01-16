@@ -29,7 +29,7 @@ public class GmdbController {
     public ResponseEntity<Object> getAMovieByTitle(@PathVariable String movieTitle) {
         ResponseEntity<Object> responseToBeReturned;
         try {
-           responseToBeReturned = new ResponseEntity<Object>(movieService.getAMovieByTitle(movieTitle), HttpStatus.OK);
+            responseToBeReturned = new ResponseEntity<Object>(movieService.getAMovieByTitle(movieTitle), HttpStatus.OK);
         } catch (MovieNotFoundException e) {
             responseToBeReturned = new ResponseEntity<Object>("Movie not found.", HttpStatus.NOT_FOUND);
         }

@@ -17,10 +17,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @ExtendWith(MockitoExtension.class)
 class GmdbControllerUnitTest {
@@ -43,7 +41,7 @@ class GmdbControllerUnitTest {
 
     /**
      * As a user, I should see a list of movies when I visit GMDB.
-     *
+     * <p>
      * When I visit GMDB
      * Then I can see a list of all movies.
      */
@@ -76,7 +74,8 @@ class GmdbControllerUnitTest {
     private MovieEntity initalizeSingleData() throws IOException {
         objectMapper = new ObjectMapper();
         File movieFile = new File(singleMovieJsonPath);
-        MovieEntity movie = objectMapper.readValue(movieFile, new TypeReference<MovieEntity>(){});
+        MovieEntity movie = objectMapper.readValue(movieFile, new TypeReference<MovieEntity>() {
+        });
         return movie;
     }
 

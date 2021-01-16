@@ -9,6 +9,7 @@ import com.galvanize.gmdb.repository.MovieRepository;
 import com.galvanize.gmdb.repository.RatingRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,16 +53,18 @@ public class MovieService {
 
     }
 
+    @Transactional
     public MovieEntity addRating(String movieTitle, Double rating) throws MovieNotFoundException {
         MovieEntity movieEntity = getAMovieByTitle(movieTitle);
         List<Rating> existingRating = movieEntity.getRatingList();
-        if(existingRating == null) {
+        if (existingRating == null) {
             existingRating = new ArrayList<>();
         }
-        existingRating.add(Rating.builder().rating(rating).build());
+        Rating newRating = Rating.builder().rating(rating).build();
+        existingRating.add(newRating);
 
         List<Double> ratingList = new ArrayList<>();
-        for (Rating item: existingRating) {
+        for (Rating item : existingRating) {
             ratingList.add(item.getRating());
         }
         Double overallRating = ratingList.stream().mapToDouble(value -> value).average().orElse(0.0);
@@ -70,7 +73,8 @@ public class MovieService {
 //        existingRating.setRating(ratings.stream().mapToDouble(val -> val).average().orElse(0.0));
 //        existingRating.setRatings(ratings);
 //        movieEntity.setRating(existingRating);
-        ratingRepository.save();
+        //ratingRepository.save(newRating);
+        //      movieRepository.save(movieEntity);
         movieRepository.save(movieEntity);
         return movieEntity;
     }

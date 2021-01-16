@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.gmdb.exception.MovieNotFoundException;
 import com.galvanize.gmdb.model.MovieEntity;
-import com.galvanize.gmdb.model.Rating;
 import com.galvanize.gmdb.repository.MovieRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,7 +68,7 @@ class MovieDtoServiceTest {
     public void getAMovieByTitle() throws IOException, MovieNotFoundException {
         MovieEntity movie = initalizeSingleData();
         when(movieRepository.findByTitle("The Avengers")).thenReturn(movie);
-        assertEquals(movie,movieService.getAMovieByTitle("The Avengers"));
+        assertEquals(movie, movieService.getAMovieByTitle("The Avengers"));
     }
 
     @Test
@@ -77,7 +76,7 @@ class MovieDtoServiceTest {
 
         when(movieRepository.findByTitle(Mockito.anyString())).thenReturn(null);
         MovieNotFoundException expected = assertThrows(MovieNotFoundException.class,
-                () ->movieService.getAMovieByTitle("abc"));
+                () -> movieService.getAMovieByTitle("abc"));
         assertEquals("Movie not found", expected.getMessage());
     }
 
@@ -99,23 +98,23 @@ class MovieDtoServiceTest {
         MovieEntity actualMovie = movieService.addRating(movieEntityExpected.getTitle(), 3.0);
 
         assertEquals(4.0, actualMovie.getRating());
-        Mockito.verify(movieRepository,times(2)).save(movieEntityExpected);
+        Mockito.verify(movieRepository, times(2)).save(movieEntityExpected);
     }
 
     private void initalizeMovieData() throws IOException {
         objectMapper = new ObjectMapper();
         File movieFile = new File(movieJsonPath);
-            movieDtoList = objectMapper.readValue(movieFile, new TypeReference<ArrayList<MovieEntity>>() {
+        movieDtoList = objectMapper.readValue(movieFile, new TypeReference<ArrayList<MovieEntity>>() {
         });
     }
 
     private MovieEntity initalizeSingleData() throws IOException {
         objectMapper = new ObjectMapper();
         File movieFile = new File(singleMovieJsonPath);
-        MovieEntity movie = objectMapper.readValue(movieFile, new TypeReference<MovieEntity>(){});
+        MovieEntity movie = objectMapper.readValue(movieFile, new TypeReference<MovieEntity>() {
+        });
         return movie;
     }
-
 
 
 }
