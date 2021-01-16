@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.gmdb.exception.MovieNotFoundException;
 import com.galvanize.gmdb.model.MovieDto;
 import com.galvanize.gmdb.model.MovieEntity;
+import com.galvanize.gmdb.model.Rating;
 import com.galvanize.gmdb.repository.MovieRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import java.util.Optional;
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -83,11 +85,24 @@ class MovieDtoServiceTest {
     }
 
     @Test
-    public void addRatingToExistingMovie() throws IOException {
+    public void addRatingToExistingMovie() throws IOException, MovieNotFoundException {
         MovieEntity movieEntityExpected = initalizeSingleData();
-        movieEntityExpected.setRating(5.0);
-        movieService.addRating(movieEntityExpected.getTitle(), movieEntityExpected.getRating());
+        movieEntityExpected.setRating(Rating.builder().overAllRating(5.0).build());
+        when(movieRepository.findByTitle("The Avengers")).thenReturn(movieEntityExpected);
+        movieService.addRating(movieEntityExpected.getTitle(), 5.0);
         Mockito.verify(movieRepository).save(movieEntityExpected);
+    }
+
+    @Test
+    public void addTwoRatingToExistingMovie() throws IOException, MovieNotFoundException {
+        MovieEntity movieEntityExpected = initalizeSingleData();
+        when(movieRepository.findByTitle("The Avengers")).thenReturn(movieEntityExpected);
+
+        movieService.addRating(movieEntityExpected.getTitle(), 5.0);
+        MovieEntity actualMovie = movieService.addRating(movieEntityExpected.getTitle(), 3.0);
+
+        assertEquals(4.0, actualMovie.getRating().getOverAllRating());
+        Mockito.verify(movieRepository,times(2)).save(movieEntityExpected);
     }
 
     private void initalizeMovieData() throws IOException {

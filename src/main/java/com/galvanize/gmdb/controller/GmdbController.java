@@ -38,7 +38,6 @@ public class GmdbController {
 
     @PostMapping("/{movieTitle}/reviews/{rating}")
     public MovieEntity addRatingToMovieTitle(@PathVariable String movieTitle, @PathVariable Double rating) throws MovieNotFoundException {
-        movieService.addRating(movieTitle, rating);
-        return null;
+        return movieService.addRating(movieTitle, rating);
     }
 }

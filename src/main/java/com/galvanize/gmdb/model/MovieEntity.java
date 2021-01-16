@@ -4,11 +4,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @EqualsAndHashCode
@@ -25,5 +24,10 @@ public class MovieEntity {
     String actors;
     String release;
     String description;
-    Double rating;
+
+    @OneToOne
+    @LazyCollection(LazyCollectionOption.FALSE)
+    Rating rating;
+
+
 }

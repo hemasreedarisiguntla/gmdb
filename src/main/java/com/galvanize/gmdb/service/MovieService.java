@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.gmdb.exception.MovieNotFoundException;
 import com.galvanize.gmdb.model.MovieDto;
 import com.galvanize.gmdb.model.MovieEntity;
+import com.galvanize.gmdb.model.Rating;
 import com.galvanize.gmdb.repository.MovieRepository;
 import org.springframework.stereotype.Service;
 
@@ -50,14 +51,24 @@ public class MovieService {
 
     }
 
-    public MovieEntity addRating(String movieTitle, Double rating) {
-        try {
-            MovieEntity movieEntity = getAMovieByTitle(movieTitle);
-            movieEntity.setRating(rating);
-            movieRepository.save(movieEntity);
-        } catch (MovieNotFoundException e) {
-            e.printStackTrace();
+    public MovieEntity addRating(String movieTitle, Double rating) throws MovieNotFoundException {
+        MovieEntity movieEntity = getAMovieByTitle(movieTitle);
+        Rating existingRating = movieEntity.getRating();
+        if(existingRating ==null) {
+            existingRating = new Rating();
         }
-        return null;
+        List<Double> ratings = existingRating.getRatings();
+        if(ratings == null) {
+            ratings = new ArrayList<>();
+        }
+
+        ratings.add(rating);
+
+        existingRating.setOverAllRating(ratings.stream().mapToDouble(val -> val).average().orElse(0.0));
+        existingRating.setRatings(ratings);
+        movieEntity.setRating(existingRating);
+
+        movieRepository.save(movieEntity);
+        return movieEntity;
     }
 }

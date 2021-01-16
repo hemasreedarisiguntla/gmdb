@@ -75,17 +75,35 @@ class GmdbControllerITTest {
     When I submit a 5 star rating
     Then I can see it in the movie details.
 
-    Given a movie with one 5 star rating and one 3 star rating
-    When I view the movie details
-    Then I expect the star rating to be 4.
+
      */
 
     @Test
     public void addRatingToMovie() throws Exception {
         mockMvc.perform(post("/movies/{movieTitle}/reviews/{rating}", "The Avengers", 5.0))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("[0].title").value("The Avengers"))
-                .andExpect(jsonPath("[0].rating").value(5.0));
+                .andExpect(jsonPath("title").value("The Avengers"))
+                .andExpect(jsonPath("rating").value(5.0));
+
+    }
+
+    /**
+     *     Given a movie with one 5 star rating and one 3 star rating
+     *     When I view the movie details
+     *     Then I expect the star rating to be 4.
+     */
+
+    @Test
+    public void addTwoRatingToMovie() throws Exception {
+        mockMvc.perform(post("/movies/{movieTitle}/reviews/{rating}", "The Avengers", 5.0))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("title").value("The Avengers"))
+                .andExpect(jsonPath("rating").value(5.0));
+
+//        mockMvc.perform(post("/movies/{movieTitle}/reviews/{rating}", "The Avengers", 3.0))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("title").value("The Avengers"))
+//                .andExpect(jsonPath("rating").value(4.0));
 
     }
 
