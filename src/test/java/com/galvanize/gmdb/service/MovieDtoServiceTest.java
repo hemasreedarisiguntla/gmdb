@@ -82,6 +82,14 @@ class MovieDtoServiceTest {
         assertEquals("Movie not found", expected.getMessage());
     }
 
+    @Test
+    public void addRatingToExistingMovie() throws IOException {
+        MovieEntity movieEntityExpected = initalizeSingleData();
+        movieEntityExpected.setRating(5.0);
+        movieService.addRating(movieEntityExpected.getTitle(), movieEntityExpected.getRating());
+        Mockito.verify(movieRepository).save(movieEntityExpected);
+    }
+
     private void initalizeMovieData() throws IOException {
         objectMapper = new ObjectMapper();
         File movieFile = new File(movieJsonPath);

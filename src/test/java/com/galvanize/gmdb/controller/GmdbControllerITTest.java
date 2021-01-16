@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -67,6 +68,25 @@ class GmdbControllerITTest {
         mockMvc.perform(get("/movies/{movieTitle}", "abc"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Movie not found."));
+    }
+
+    /**
+    Given an existing movie
+    When I submit a 5 star rating
+    Then I can see it in the movie details.
+
+    Given a movie with one 5 star rating and one 3 star rating
+    When I view the movie details
+    Then I expect the star rating to be 4.
+     */
+
+    @Test
+    public void addRatingToMovie() throws Exception {
+        mockMvc.perform(post("/movies/{movieTitle}/reviews/{rating}", "The Avengers", 5.0))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("[0].title").value("The Avengers"))
+                .andExpect(jsonPath("[0].rating").value(5.0));
+
     }
 
 }

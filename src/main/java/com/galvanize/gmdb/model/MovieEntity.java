@@ -25,5 +25,5 @@ public class MovieEntity {
     String actors;
     String release;
     String description;
-    String rating;
+    Double rating;
 }

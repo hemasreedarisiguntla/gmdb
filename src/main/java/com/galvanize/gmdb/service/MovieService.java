@@ -49,4 +49,15 @@ public class MovieService {
         }
 
     }
+
+    public MovieEntity addRating(String movieTitle, Double rating) {
+        try {
+            MovieEntity movieEntity = getAMovieByTitle(movieTitle);
+            movieEntity.setRating(rating);
+            movieRepository.save(movieEntity);
+        } catch (MovieNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
