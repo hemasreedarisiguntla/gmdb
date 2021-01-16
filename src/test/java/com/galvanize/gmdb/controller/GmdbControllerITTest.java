@@ -38,4 +38,35 @@ class GmdbControllerITTest {
                 .andExpect(jsonPath("[0].release").value("2012"));
     }
 
+    /**
+     * As a user, I can browse each movie so I can learn all the details.
+     *
+     * Rule: Movie details include title, director, actors, release year, description and star rating.
+     *
+     * Given an existing movie
+     * When I visit that title
+     * Then I can see all the movie details.
+     */
+
+    @Test
+    public void getAMovieByTitle() throws Exception {
+
+        mockMvc.perform(get("/movies/{movieTitle}","The Avengers"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("title").value("The Avengers"))
+                .andExpect(jsonPath("release").value("2012"));
+    }
+    /**
+     * Given a non-existing movie
+     * When I visit that title
+     * Then I receive a friendly message that it doesn't exist.
+     */
+
+    @Test
+    public void getAMovieByTitleNotFound() throws Exception {
+        mockMvc.perform(get("/movies/{movieTitle}", "abc"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Movie not found"));
+    }
+
 }

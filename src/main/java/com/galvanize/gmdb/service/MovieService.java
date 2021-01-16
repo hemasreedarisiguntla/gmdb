@@ -2,6 +2,7 @@ package com.galvanize.gmdb.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.galvanize.gmdb.exception.MovieNotFoundException;
 import com.galvanize.gmdb.model.MovieDto;
 import com.galvanize.gmdb.model.MovieEntity;
 import com.galvanize.gmdb.repository.MovieRepository;
@@ -37,5 +38,15 @@ public class MovieService {
 
     public List<MovieEntity> getAllMovies() {
         return movieRepository.findAll();
+    }
+
+    public MovieEntity getAMovieByTitle(String movieTitle) throws MovieNotFoundException {
+        MovieEntity movie = movieRepository.findByTitle(movieTitle);
+        if (movie == null) {
+            throw new MovieNotFoundException("Movie not found");
+        } else {
+            return movie;
+        }
+
     }
 }
