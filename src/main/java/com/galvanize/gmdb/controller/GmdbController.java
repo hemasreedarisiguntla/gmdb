@@ -1,6 +1,6 @@
 package com.galvanize.gmdb.controller;
 
-import com.galvanize.gmdb.model.Movie;
+import com.galvanize.gmdb.model.MovieEntity;
 import com.galvanize.gmdb.service.MovieService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,8 +18,7 @@ public class GmdbController {
 
 
     @GetMapping("/movies")
-    public List<Movie> getAllMovies() {
-        return null;
-        //return movieService.getAllMovies();
+    public List<MovieEntity> getAllMovies() {
+        return movieService.getAllMovies();
     }
 }

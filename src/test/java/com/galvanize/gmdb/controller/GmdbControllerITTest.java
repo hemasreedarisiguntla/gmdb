@@ -31,11 +31,11 @@ class GmdbControllerITTest {
      */
     @Test
     public void getAllMovies() throws Exception {
-        mockMvc.perform(get("/movies"))
-                .andExpect(status().isOk());
-//                .andExpect(jsonPath("[0].title").value("The Avengers"))
-//                .andExpect(jsonPath("[0].release").value("2012"));
 
+        mockMvc.perform(get("/movies"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("[0].title").value("The Avengers"))
+                .andExpect(jsonPath("[0].release").value("2012"));
     }
 
 }
